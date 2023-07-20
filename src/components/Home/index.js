@@ -1,4 +1,8 @@
 import {Component} from 'react'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import 'react-loading-skeleton/dist/skeleton.css'
 import {AiOutlineSearch} from 'react-icons/ai'
 import './index.css'
 
@@ -16,21 +20,29 @@ const apiConstants = {
   failure: 'FAILURE',
 }
 
+const array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 class Home extends Component {
-  state = {activeId: 0, apiStatus: apiConstants.initial, imageList: []}
+  state = {
+    activeId: 0,
+    apiStatus: apiConstants.initial,
+    imageList: [],
+    searchInput: '',
+    isEnter: false,
+  }
 
   componentDidMount = () => {
     this.getDetails()
   }
 
   onActive = id => {
-    this.setState({activeId: id}, this.getDetails)
+    this.setState({activeId: id, searchInput: ''}, this.getDetails)
   }
 
   getDetails = async () => {
     this.setState({apiStatus: apiConstants.progress})
-    const {activeId} = this.state
-    const tabName = tabs[activeId].name.toLowerCase()
+    const {activeId, searchInput, isEnter} = this.state
+    const tabName = isEnter ? searchInput : tabs[activeId].name.toLowerCase()
     const token = 'vbvHqKoEAtjAvNXSsltMWaiQQJJW9K8Tn8FsUmKm36U'
     const url = `https://api.unsplash.com/search/photos?client_id=${token}&query=${tabName}&page=3&per_page=10`
     const response = await fetch(url)
@@ -43,22 +55,48 @@ class Home extends Component {
         link: eachItem.links.html,
         username: eachItem.user.instagram_username,
       }))
-      this.setState({apiStatus: apiConstants.success, imageList: formattedData})
+      setTimeout(() => {
+        this.setState({
+          apiStatus: apiConstants.success,
+          imageList: formattedData,
+          isEnter: false,
+        })
+      }, 800)
     } else {
       this.setState({apiStatus: apiConstants.failure})
+    }
+  }
+
+  onSearch = event => {
+    this.setState({searchInput: event.target.value})
+  }
+
+  onEnter = event => {
+    if (event.key === 'Enter') {
+      this.setState({isEnter: true}, this.getDetails)
     }
   }
 
   renderFailure = () => (
     <div className="container">
       <p>Something went wrong.</p>
-      <button type="button" onClick={this.getDetails}>
+      <button className="tab active" type="button" onClick={this.getDetails}>
         Try Again
       </button>
     </div>
   )
 
-  renderProgress = () => <p>Progress</p>
+  renderProgress = () => (
+    <SkeletonTheme highlightColor="rgb(255, 217, 203)">
+      <ul className="image-list">
+        {array.map(each => (
+          <li className="image-item" key={each}>
+            <Skeleton width="180px" height="160px" />
+          </li>
+        ))}
+      </ul>
+    </SkeletonTheme>
+  )
 
   renderSuccess = () => {
     const {imageList} = this.state
@@ -88,7 +126,7 @@ class Home extends Component {
   }
 
   render() {
-    const {activeId} = this.state
+    const {activeId, searchInput} = this.state
     return (
       <div className="app-container">
         <img
@@ -97,7 +135,13 @@ class Home extends Component {
           className="logo"
         />
         <div className="input-container">
-          <input placeholder="Search Image" type="search" />
+          <input
+            placeholder="Search Image"
+            type="search"
+            value={searchInput}
+            onChange={this.onSearch}
+            onKeyDown={this.onEnter}
+          />
           <AiOutlineSearch className="icon" />
         </div>
         <div className="tab-container">
