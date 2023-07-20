@@ -89,13 +89,20 @@ class Home extends Component {
 
   renderProgress = () => (
     <SkeletonTheme highlightColor="rgb(255, 217, 203)">
-      <ul className="image-list">
+      <div className="image-list view-lg">
         {array.map(each => (
           <li className="image-item" key={each}>
             <Skeleton width="180px" height="160px" />
           </li>
         ))}
-      </ul>
+      </div>
+      <div className="image-list view-sm">
+        {array.map(each => (
+          <li className="image-item" key={each}>
+            <Skeleton width="100%" height="200px" />
+          </li>
+        ))}
+      </div>
     </SkeletonTheme>
   )
 
