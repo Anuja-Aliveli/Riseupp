@@ -3,7 +3,7 @@ import {Component} from 'react'
 import Skeleton, {SkeletonTheme} from 'react-loading-skeleton'
 // eslint-disable-next-line import/no-extraneous-dependencies
 import 'react-loading-skeleton/dist/skeleton.css'
-import {AiOutlineSearch} from 'react-icons/ai'
+import {AiOutlineSearch, AiOutlineClose} from 'react-icons/ai'
 import './index.css'
 
 const tabs = [
@@ -54,6 +54,7 @@ class Home extends Component {
         imageId: eachItem.id,
         link: eachItem.links.html,
         username: eachItem.user.instagram_username,
+        isPopup: false,
       }))
       setTimeout(() => {
         this.setState({
@@ -98,13 +99,70 @@ class Home extends Component {
     </SkeletonTheme>
   )
 
+  mouseEnter = details => {
+    this.setState(prevState => ({
+      imageList: prevState.imageList.map(eachImg =>
+        eachImg.imageId === details.imageId
+          ? {...eachImg, isPopup: true}
+          : eachImg,
+      ),
+    }))
+  }
+
+  mouseLeave = details => {
+    this.setState(prevState => ({
+      imageList: prevState.imageList.map(eachImg =>
+        eachImg.imageId === details.imageId
+          ? {...eachImg, isPopup: false}
+          : eachImg,
+      ),
+    }))
+  }
+
+  onClose = details => {
+    this.setState(prevState => ({
+      imageList: prevState.imageList.map(eachImg =>
+        eachImg.imageId === details.imageId
+          ? {...eachImg, isPopup: false}
+          : eachImg,
+      ),
+    }))
+  }
+
   renderSuccess = () => {
     const {imageList} = this.state
     return (
       <ul className="image-list">
         {imageList.map(eachImg => (
-          <li className="image-item" key={eachImg.imageId}>
+          <li
+            className={`image-item ${eachImg.isPopup ? 'show-details' : ''}`}
+            key={eachImg.imageId}
+            onMouseEnter={() => this.mouseEnter(eachImg)}
+            onMouseLeave={() => this.mouseLeave(eachImg)}
+          >
             <img className="image" src={eachImg.imageUrl} alt={eachImg.alt} />
+            <div className="image-details">
+              <AiOutlineClose
+                className="close"
+                onClick={() => this.onClose(eachImg)}
+              />
+              <p className="text">
+                <span>Caption: </span>
+                {eachImg.alt}
+              </p>
+              <p className="text place">
+                <span>Username: </span>
+                {eachImg.username}
+              </p>
+              <a
+                href={eachImg.link}
+                target="_blank"
+                rel="noreferrer"
+                className="link"
+              >
+                View Image
+              </a>
+            </div>
           </li>
         ))}
       </ul>
