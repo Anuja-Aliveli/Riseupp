@@ -1,5 +1,5 @@
-import "./App.css";
+import './App.css'
 import Home from './components/Home'
 
-const App = () => <Home />;
-export default App;
+const App = () => <Home />
+export default App
