@@ -161,9 +161,12 @@ input::placeholder {
 .view-sm {
   display: none;
 }
+<<<<<<< HEAD
 .last {
     margin-right: 0;
 }
+=======
+>>>>>>> origin/main
 @media screen and (max-width: 576px) {
   .view-sm {
     display: block;
@@ -187,7 +190,10 @@ input::placeholder {
   .tab {
     width: 70px;
   }
+<<<<<<< HEAD
   .tab-container {
       width: 100%;
   }
+=======
+>>>>>>> origin/main
 }

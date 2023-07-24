@@ -190,6 +190,7 @@ class Home extends Component {
     }
   }
 
+<<<<<<< HEAD
   getTabs = eachTab => {
     const {activeId} = this.state
     const lastId = eachTab.id === 3 ? 'last' : ''
@@ -210,6 +211,10 @@ class Home extends Component {
 
   render() {
     const {searchInput} = this.state
+=======
+  render() {
+    const {activeId, searchInput} = this.state
+>>>>>>> origin/main
     return (
       <div className="app-container">
         <img
@@ -219,7 +224,11 @@ class Home extends Component {
         />
         <div className="input-container">
           <input
+<<<<<<< HEAD
             placeholder="Search Image and Press Enter"
+=======
+            placeholder="Search Image"
+>>>>>>> origin/main
             type="search"
             value={searchInput}
             onChange={this.onSearch}
@@ -228,7 +237,21 @@ class Home extends Component {
           <AiOutlineSearch className="icon" />
         </div>
         <div className="tab-container">
+<<<<<<< HEAD
           {tabs.map(eachTab => this.getTabs(eachTab))}
+=======
+          {tabs.map(eachTab => (
+            <button
+              className={activeId === eachTab.id ? 'active tab' : 'tab'}
+              type="button"
+              id={eachTab.id}
+              onClick={() => this.onActive(eachTab.id)}
+              key={eachTab.id}
+            >
+              {eachTab.name}
+            </button>
+          ))}
+>>>>>>> origin/main
         </div>
         <div className="image-container">{this.renderResult()}</div>
       </div>
